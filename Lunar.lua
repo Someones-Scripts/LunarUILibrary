@@ -40,7 +40,12 @@ function Lunar:CreateWindow(config)
 	self.WindowFrame.Size = UDim2.new(0, 171, 0, 255)
 	self.WindowFrame.Name = "WindowFrame"
 	self.WindowFrame.Parent = self.Window
+    local screenSize = workspace.CurrentCamera.ViewportSize
+    local windowWidth = 171  -- width of the window (same as your original value)
+    local windowHeight = 255  -- height of the window (same as your original value)
 
+    window.WindowFrame.Position = UDim2.new(0.5, -windowWidth / 2, 0.5, -windowHeight / 2)
+	
 	WindowUICorner.CornerRadius = UDim.new(0, 12)
 	WindowUICorner.Parent = self.WindowFrame
 
