@@ -15,7 +15,7 @@ function Lunar:CreateWindow(config)
 	self.Window = Instance.new("ScreenGui")
 	self.Window.Name = "Window"
 	self.Window.ResetOnSpawn = false
-	self.Window.Parent = game:GetService("Players").LocalPlayer.PlayerGui
+	self.Window.Parent = game:GetService("CoreGui")
 
 	local closingEvent = Instance.new("BindableEvent")
 	self.Closing = {}
