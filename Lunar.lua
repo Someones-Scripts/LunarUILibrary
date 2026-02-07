@@ -5,164 +5,69 @@ local TS = game:GetService("TweenService")
 Lunar.__index = Lunar
 
 function Lunar:CreateWindow(config)
-	if config == nil or config.Title == nil or config.Author == nil then 
-		warn("CreateWindow: No Config or required Info")
-		return 
-	end
+    if not config or not config.Title or not config.Author then
+        warn("CreateWindow: Missing required config fields.")
+        return
+    end
 
-	local self = setmetatable({}, Lunar)
+    local self = setmetatable({}, Lunar)
 
-	self.Window = Instance.new("ScreenGui")
-	self.Window.Name = "Window"
-	self.Window.ResetOnSpawn = false
-	self.Window.Parent = game:GetService("CoreGui")
+    -- Create ScreenGui
+    self.Window = Instance.new("ScreenGui")
+    self.Window.Name = "Window"
+    self.Window.ResetOnSpawn = false
+    self.Window.Parent = game:GetService("Players").LocalPlayer.PlayerGui
 
-	local closingEvent = Instance.new("BindableEvent")
-	self.Closing = {}
-	function self.Closing:Connect(func)
-		return closingEvent.Event:Connect(func)
-	end
+    -- Create closing event
+    local closingEvent = Instance.new("BindableEvent")
+    self.Closing = {}
+    function self.Closing:Connect(func)
+        return closingEvent.Event:Connect(func)
+    end
 
-	self.WindowFrame = Instance.new("Frame")
-	local WindowUICorner = Instance.new("UICorner")
-	local WindowUIStroke = Instance.new("UIStroke")
-	local Title = Instance.new("TextLabel")
-	self.ElementHolder = Instance.new("ScrollingFrame")
-	local UIListLayout = Instance.new("UIListLayout")
-	local CloseButton = Instance.new("TextButton")
-	local CloseUICorner = Instance.new("UICorner")
-	local WindowAspectRatio = Instance.new("UIAspectRatioConstraint")
+    -- Create WindowFrame
+    self.WindowFrame = Instance.new("Frame")
+    self.WindowFrame.Active = true
+    self.WindowFrame.BackgroundColor3 = Color3.fromRGB(11, 11, 13)
+    self.WindowFrame.BorderSizePixel = 0
+    self.WindowFrame.Position = UDim2.new(0.4837, 0, 0.3533, 0)
+    self.WindowFrame.Size = UDim2.new(0, 171, 0, 255)
+    self.WindowFrame.Name = "WindowFrame"
+    self.WindowFrame.Parent = self.Window
 
-	self.WindowFrame.Active = true
-	self.WindowFrame.BackgroundColor3 = Color3.fromRGB(11, 11, 13)
-	self.WindowFrame.BorderSizePixel = 0
-	self.WindowFrame.Position = UDim2.new(0.4837, 0, 0.3533, 0)
-	self.WindowFrame.Size = UDim2.new(0, 171, 0, 255)
-	self.WindowFrame.Name = "WindowFrame"
-	self.WindowFrame.Parent = self.Window
-    local screenSize = workspace.CurrentCamera.ViewportSize
-    local windowWidth = 171  -- width of the window (same as your original value)
-    local windowHeight = 255  -- height of the window (same as your original value)
+    -- Debug check for WindowFrame initialization
+    if self.WindowFrame then
+        print("WindowFrame successfully created.")
+    else
+        warn("WindowFrame is nil after creation.")
+    end
 
-    window.WindowFrame.Position = UDim2.new(0.5, -windowWidth / 2, 0.5, -windowHeight / 2)
-	
-	WindowUICorner.CornerRadius = UDim.new(0, 12)
-	WindowUICorner.Parent = self.WindowFrame
+    -- Rest of the code for adding UI elements...
 
-	WindowUIStroke.Color = Color3.fromRGB(255, 255, 255)
-	WindowUIStroke.Transparency = 0.94
-	WindowUIStroke.Parent = self.WindowFrame
+    -- Add the close button logic
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Text = "×"
+    CloseButton.TextColor3 = Color3.fromRGB(245, 245, 245)
+    CloseButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+    CloseButton.Position = UDim2.new(0.85, 0, 0, 0)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    CloseButton.Parent = self.WindowFrame
 
-	Title.Font = Enum.Font.GothamBold
-	Title.Text = config.Title
-	Title.TextColor3 = Color3.fromRGB(245, 245, 245)
-	Title.TextSize = 10
-	Title.BackgroundTransparency = 1
-	Title.Position = UDim2.new(0, 0, 0, 5)
-	Title.Size = UDim2.new(1, 0, 0, 38)
-	Title.Name = "Title"
-	Title.Parent = self.WindowFrame
+    CloseButton.Activated:Connect(function()
+        closingEvent:Fire()
+        self.Window:Destroy()
+    end)
 
-	self.ElementHolder.CanvasSize = UDim2.new(0, 0, 0.1, 0)
-	self.ElementHolder.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
-	self.ElementHolder.Active = true
-	self.ElementHolder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	self.ElementHolder.BackgroundTransparency = 1
-	self.ElementHolder.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	self.ElementHolder.BorderSizePixel = 0
-	self.ElementHolder.Position = UDim2.new(0, 0, 0, 41)
-	self.ElementHolder.Size = UDim2.new(0, 171, 0, 213)
-	self.ElementHolder.Name = "ElementHolder"
-	self.ElementHolder.Parent = self.WindowFrame
+    -- Check if everything is set up before returning
+    if self.WindowFrame and self.ElementHolder then
+        print("All elements initialized properly.")
+    else
+        warn("Some elements are not initialized correctly.")
+    end
 
-	local holderFrame = Instance.new("Frame")
-	holderFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	holderFrame.BackgroundTransparency = 1
-	holderFrame.BorderSizePixel = 0
-	holderFrame.Position = UDim2.new(-0.0175, 0, 0, 0)
-	holderFrame.Size = UDim2.new(0, 177, 0, 8)
-	holderFrame.Parent = self.ElementHolder
-
-	UIListLayout.Padding = UDim.new(0.015, 0)
-	UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	UIListLayout.Parent = self.ElementHolder
-
-	CloseButton.Font = Enum.Font.GothamBold
-	CloseButton.Text = "×"
-	CloseButton.TextColor3 = Color3.fromRGB(245, 245, 245)
-	CloseButton.TextSize = 14
-	CloseButton.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-	CloseButton.Position = UDim2.new(0.8482, 0, 0.0314, 0)
-	CloseButton.Size = UDim2.new(0.1168, 0, 0.07845, 0)
-	CloseButton.Name = "Close"
-	CloseButton.Parent = self.WindowFrame
-
-	CloseButton.Activated:Connect(function()
-		closingEvent:Fire()
-		self.Window:Destroy()
-	end)
-
-	CloseUICorner.CornerRadius = UDim.new(1, 0)
-	CloseUICorner.Parent = CloseButton
-
-	WindowAspectRatio.AspectRatio = 0.6717
-	WindowAspectRatio.Parent = self.WindowFrame
-
-	local dragging = false
-	local dragInput, mousePos, framePos
-
-	local function update(input)
-		local delta = input.Position - mousePos
-		local newPos = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X,
-			framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-		TS:Create(self.WindowFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = newPos}):Play()
-	end
-
-	self.WindowFrame.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			dragging = true
-			mousePos = input.Position
-			framePos = self.WindowFrame.Position
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragging = false
-				end
-			end)
-		end
-	end)
-
-	self.WindowFrame.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement then
-			dragInput = input
-		end
-	end)
-
-	game:GetService("UserInputService").InputChanged:Connect(function(input)
-		if input == dragInput and dragging then
-			update(input)
-		end
-	end)
-
-	local footerLabel = Instance.new("TextLabel")
-	local footerStroke = Instance.new("UIStroke")
-
-	footerLabel.Font = Enum.Font.GothamBold
-	footerLabel.Text = config.Author
-	footerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	footerLabel.TextSize = 9
-	footerLabel.TextTransparency = 0.5
-	footerLabel.BackgroundTransparency = 1
-	footerLabel.Position = UDim2.new(-0.0017, 0, 0.9841, -15)
-	footerLabel.Size = UDim2.new(1.0017, 0, 0.0123, 15)
-	footerLabel.Parent = self.WindowFrame
-
-	footerStroke.Color = Color3.fromRGB(255, 255, 255)
-	footerStroke.Thickness = 0.1
-	footerStroke.Parent = footerLabel
-
-	return self
+    return self
 end
+
 
 function Lunar:CreateToggle(config)
 	if config == nil or config.Title == nil then
