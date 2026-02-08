@@ -226,5 +226,79 @@ function Lunar:CreateToggle(config)
 		end
 	end)
 end
+function Lunar:CreateSlider(config)
+	local sliderFrame = Instance.new("Frame")
+sliderFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
+sliderFrame.Position = UDim2.new(0, 12, 0, 123)
+sliderFrame.Size = UDim2.new(1, -24, 0, 36)
+sliderFrame.Name = "Slider"
+sliderFrame.Parent = self.ElementHolder
 
+local sliderUICorner = Instance.new("UICorner")
+sliderUICorner.Parent = sliderFrame
+
+local sliderUIStroke = Instance.new("UIStroke")
+sliderUIStroke.Transparency = 0.94
+sliderUIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+sliderUIStroke.Color = Color3.fromRGB(255, 255, 255)
+sliderUIStroke.Parent = sliderFrame
+
+local detector = Instance.new("TextButton")
+detector.Font = Enum.Font.SourceSans
+detector.Text = ""
+detector.TextColor3 = Color3.fromRGB(0, 0, 0)
+detector.TextSize = 14
+detector.AutoButtonColor = false
+detector.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+detector.BorderColor3 = Color3.fromRGB(0, 0, 0)
+detector.BorderSizePixel = 0
+detector.Position = UDim2.new(0.0612244904, 0, 0.527777791, 0)
+detector.Size = UDim2.new(0.870748281, 0, 0.305555552, 0)
+detector.Name = "Detector"
+detector.Parent = sliderFrame
+
+local detectorUICorner = Instance.new("UICorner")
+detectorUICorner.CornerRadius = UDim.new(0, 4)
+detectorUICorner.Parent = detector
+
+local fill = Instance.new("Frame")
+fill.BackgroundColor3 = Color3.fromRGB(0, 242, 255)
+fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
+fill.BorderSizePixel = 0
+fill.Size = UDim2.new(0.899999976, 0, 1, 0)
+fill.Name = "Fill"
+fill.Parent = detector
+
+local fillUICorner = Instance.new("UICorner")
+fillUICorner.CornerRadius = UDim.new(0, 4)
+fillUICorner.Parent = fill
+
+local valueLabel = Instance.new("TextLabel")
+valueLabel.Font = Enum.Font.Unknown
+valueLabel.Text = "16 ws"
+valueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+valueLabel.TextScaled = true
+valueLabel.TextSize = 7
+valueLabel.TextWrapped = true
+valueLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+valueLabel.BackgroundTransparency = 1
+valueLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+valueLabel.BorderSizePixel = 0
+valueLabel.Size = UDim2.new(1, 0, 1, 0)
+valueLabel.Name = "Value"
+valueLabel.Parent = detector
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextColor3 = Color3.fromRGB(242, 242, 242)
+titleLabel.TextSize = 11
+titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.BackgroundTransparency = 1
+titleLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+titleLabel.BorderSizePixel = 0
+titleLabel.Size = UDim2.new(1, 0, 0.333333343, 0)
+titleLabel.Name = "Title"
+titleLabel.Parent = sliderFrame
+
+end
 return Lunar
