@@ -226,121 +226,33 @@ function Lunar:CreateToggle(config)
 		end
 	end)
 end
-function Lunar:CreateSlider(config)
-    if config == nil or config.Title == nil then
-        warn("CreateSlider: No Config or required Info")
-        return
+local Lunar = loadstring(game:HttpGet("https://raw.githubusercontent.com/Someones-Scripts/LunarUILibrary/refs/heads/main/Lunar.lua"))()
+
+local window = Lunar:CreateWindow({
+    Title = "My Window",
+    Author = "My Name"
+})
+
+window:CreateToggle({
+    Title = "My Toggle",
+    Callback = function(value)
+        print("Toggle State: ", value)
     end
+})
 
-    local sliderFrame = Instance.new("Frame")
-    sliderFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
-    sliderFrame.Position = UDim2.new(0, 12, 0, 123)
-    sliderFrame.Size = UDim2.new(1, -24, 0, 36)
-    sliderFrame.Name = "Slider"
-    sliderFrame.Parent = self.ElementHolder
-
-    local sliderUICorner = Instance.new("UICorner")
-    sliderUICorner.Parent = sliderFrame
-
-    local sliderUIStroke = Instance.new("UIStroke")
-    sliderUIStroke.Transparency = 0.94
-    sliderUIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    sliderUIStroke.Color = Color3.fromRGB(255, 255, 255)
-    sliderUIStroke.Parent = sliderFrame
-
-    local detector = Instance.new("TextButton")
-    detector.Font = Enum.Font.SourceSans
-    detector.Text = ""
-    detector.TextColor3 = Color3.fromRGB(0, 0, 0)
-    detector.TextSize = 14
-    detector.AutoButtonColor = false
-    detector.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    detector.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    detector.BorderSizePixel = 0
-    detector.Position = UDim2.new(0.0612244904, 0, 0.527777791, 0)
-    detector.Size = UDim2.new(0.870748281, 0, 0.305555552, 0)
-    detector.Name = "Detector"
-    detector.Parent = sliderFrame
-
-    local detectorUICorner = Instance.new("UICorner")
-    detectorUICorner.CornerRadius = UDim.new(0, 4)
-    detectorUICorner.Parent = detector
-
-    local fill = Instance.new("Frame")
-    fill.BackgroundColor3 = Color3.fromRGB(0, 242, 255)
-    fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    fill.BorderSizePixel = 0
-    fill.Size = UDim2.new(0, 0, 1, 0)  -- Initially, the fill is empty
-    fill.Name = "Fill"
-    fill.Parent = detector
-
-    local fillUICorner = Instance.new("UICorner")
-    fillUICorner.CornerRadius = UDim.new(0, 4)
-    fillUICorner.Parent = fill
-
-    local valueLabel = Instance.new("TextLabel")
-    valueLabel.Font = Enum.Font.GothamBold
-    valueLabel.Text = tostring(config.Value.Default)
-    valueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-    valueLabel.TextScaled = true
-    valueLabel.TextSize = 7
-    valueLabel.TextWrapped = true
-    valueLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    valueLabel.BackgroundTransparency = 1
-    valueLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    valueLabel.BorderSizePixel = 0
-    valueLabel.Size = UDim2.new(1, 0, 1, 0)
-    valueLabel.Name = "Value"
-    valueLabel.Parent = detector
-
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextColor3 = Color3.fromRGB(242, 242, 242)
-    titleLabel.TextSize = 11
-    titleLabel.BackgroundColor3 = Color3.fromRGB(143, 143, 143)
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    titleLabel.BorderSizePixel = 0
-    titleLabel.Size = UDim2.new(1, 0, 0.333333343, 0)
-    titleLabel.Name = config.Title
-    titleLabel.Parent = sliderFrame
-    
-    local Holding = false
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-
-    local function GetMousePos()
-        return Vector2.new(mouse.X, mouse.Y)
+window:CreateSlider({
+    Title = "My Slider",
+    Value = {
+        Min = 0,
+        Max = 100,
+        Default = 50
+    },
+    Step = 1,
+    Callback = function(value)
+        print("Slider Value: ", value)
     end
+})
 
-    detector.MouseButton1Down:Connect(function(x)
-        Holding = true
-    end)
-
-    detector.MouseButton1Up:Connect(function(x)
-        Holding = false
-    end)
-
-    local function UpdateSlider()
-        if Holding then
-            local relativePos = math.clamp(GetMousePos().X - sliderFrame.AbsolutePosition.X, 0, sliderFrame.AbsoluteSize.X)
-            local fillSize = relativePos / sliderFrame.AbsoluteSize.X
-            fill.Size = UDim2.new(fillSize, 0, 1, 0)
-
-            local value = math.floor(config.Value.Min + (fillSize * (config.Value.Max - config.Value.Min)))
-            valueLabel.Text = tostring(value)
-
-            if config.Callback then
-                config.Callback(value)
-            end
-        end
-    end
-
-    local connection = game:GetService("RunService").Heartbeat:Connect(UpdateSlider)
-
-    self.Closing:Connect(function()
-        connection:Disconnect()
-    end)
-end
 
 
 return Lunar
