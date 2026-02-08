@@ -227,7 +227,11 @@ function Lunar:CreateToggle(config)
 	end)
 end
 function Lunar:CreateSlider(config)
-	local sliderFrame = Instance.new("Frame")
+	if config == nil or config.Title == nil then
+		warn("CreateSlider: No Config or required Info")
+		return
+	end
+local sliderFrame = Instance.new("Frame")
 sliderFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
 sliderFrame.Position = UDim2.new(0, 12, 0, 123)
 sliderFrame.Size = UDim2.new(1, -24, 0, 36)
@@ -297,7 +301,7 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 titleLabel.BorderSizePixel = 0
 titleLabel.Size = UDim2.new(1, 0, 0.333333343, 0)
-titleLabel.Name = "Title"
+titleLabel.Name = config.Title
 titleLabel.Parent = sliderFrame
 
 end
