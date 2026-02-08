@@ -270,7 +270,7 @@ function Lunar:CreateSlider(config)
     fill.BackgroundColor3 = Color3.fromRGB(0, 242, 255)
     fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
     fill.BorderSizePixel = 0
-    fill.Size = UDim2.new(0, 0, 1, 0)
+    fill.Size = UDim2.new(0, 0, 1, 0)  -- Initially, the fill is empty
     fill.Name = "Fill"
     fill.Parent = detector
 
@@ -304,27 +304,20 @@ function Lunar:CreateSlider(config)
     titleLabel.Size = UDim2.new(1, 0, 0.333333343, 0)
     titleLabel.Name = config.Title
     titleLabel.Parent = sliderFrame
-
+    
     local Holding = false
     local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local UIS = game:GetService("UserInputService")
 
     local function GetMousePos()
         return Vector2.new(mouse.X, mouse.Y)
     end
 
-    UIS.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            if detector:IsMouseOver() then
-                Holding = true
-            end
-        end
+    detector.MouseButton1Down:Connect(function(x)
+        Holding = true
     end)
 
-    UIS.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            Holding = false
-        end
+    detector.MouseButton1Up:Connect(function(x)
+        Holding = false
     end)
 
     local function UpdateSlider()
