@@ -232,11 +232,6 @@ function Lunar:CreateSlider(config)
         return
     end
 
-    local step = config.Step or 1
-    local minValue = config.Value.Min or 0
-    local maxValue = config.Value.Max or 100
-    local defaultValue = config.Value.Default or (minValue + maxValue) / 2
-    
     local sliderFrame = Instance.new("Frame")
     sliderFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
     sliderFrame.Position = UDim2.new(0, 12, 0, 123)
@@ -285,7 +280,7 @@ function Lunar:CreateSlider(config)
 
     local valueLabel = Instance.new("TextLabel")
     valueLabel.Font = Enum.Font.GothamBold
-    valueLabel.Text = tostring(defaultValue)
+    valueLabel.Text = tostring(config.Value.Default)
     valueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
     valueLabel.TextScaled = true
     valueLabel.TextSize = 7
@@ -308,50 +303,51 @@ function Lunar:CreateSlider(config)
     titleLabel.BorderSizePixel = 0
     titleLabel.Size = UDim2.new(1, 0, 0.333333343, 0)
     titleLabel.Name = config.Title
-    titleLabel.Text = config.Title
     titleLabel.Parent = sliderFrame
 
     local Holding = false
-    local mouse = game.Players.LocalPlayer:GetMouse()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local UIS = game:GetService("UserInputService")
 
     local function GetMousePos()
         return Vector2.new(mouse.X, mouse.Y)
     end
 
-    detector.MouseButton1Down:Connect(function(x)
-        Holding = true
-    end)
-
-    detector.MouseButton1Up:Connect(function(x)
-        Holding = false
-    end)
-
-    local connection
-    connection = game:GetService("RunService").Heartbeat:Connect(function()
-        if Holding then
-            local mousePos = GetMousePos()
-            local relativePos = mousePos.X - sliderFrame.AbsolutePosition.X
-            local width = math.clamp(relativePos, 0, sliderFrame.AbsoluteSize.X)
-            fill.Size = UDim2.new(0, width, 1, 0)
-            
-            local percentage = width / sliderFrame.AbsoluteSize.X
-            local value = math.floor(percentage * (maxValue - minValue) + minValue)
-
-            if step % 1 ~= 0 then
-                value = math.floor(value / step) * step
+    UIS.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if detector:IsMouseOver() then
+                Holding = true
             end
+        end
+    end)
 
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            Holding = false
+        end
+    end)
+
+    local function UpdateSlider()
+        if Holding then
+            local relativePos = math.clamp(GetMousePos().X - sliderFrame.AbsolutePosition.X, 0, sliderFrame.AbsoluteSize.X)
+            local fillSize = relativePos / sliderFrame.AbsoluteSize.X
+            fill.Size = UDim2.new(fillSize, 0, 1, 0)
+
+            local value = math.floor(config.Value.Min + (fillSize * (config.Value.Max - config.Value.Min)))
             valueLabel.Text = tostring(value)
 
             if config.Callback then
                 config.Callback(value)
             end
         end
-    end)
+    end
+
+    local connection = game:GetService("RunService").Heartbeat:Connect(UpdateSlider)
 
     self.Closing:Connect(function()
         connection:Disconnect()
     end)
 end
+
 
 return Lunar
