@@ -330,9 +330,8 @@ function Lunar:CreateSlider(config)
     connection = game:GetService("RunService").Heartbeat:Connect(function()
         if Holding then
             local mousePos = GetMousePos()
-            local relativePos = mousePos.X - sliderFrame.AbsolutePosition.X
-            local width = math.clamp(relativePos, 0, sliderFrame.AbsoluteSize.X)
-            fill.Size = UDim2.new(0, width, 1, 0)
+		    local width = math.clamp((mouse.X - detector.AbsolutePosition.X) / detector.AbsoluteSize.X, 0, 1)
+             Fill.Size = UDim2.new(width, 0, 1, 0)
             
             local percentage = width / sliderFrame.AbsoluteSize.X
             local value = math.floor(percentage * (maxValue - minValue) + minValue)
