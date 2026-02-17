@@ -331,7 +331,7 @@ function Lunar:CreateSlider(config)
         if Holding then
             local mousePos = GetMousePos()
 		    local width = math.clamp((mouse.X - detector.AbsolutePosition.X) / detector.AbsoluteSize.X, 0, 1)
-             Fill.Size = UDim2.new(width, 0, 1, 0)
+             fill.Size = UDim2.new(width, 0, 1, 0)
             
             local percentage = width / sliderFrame.AbsoluteSize.X
             local value = math.floor(percentage * (maxValue - minValue) + minValue)
